@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Product System</title>
+</head>
+
+<body>
+
+<h2>Add Product</h2>
+
+<input type="file" id="image"><br><br>
+
+<input type="text" id="name" placeholder="Product Name"><br><br>
+<input type="number" id="price" placeholder="Price"><br><br>
+<input type="text" id="brand" placeholder="Brand"><br><br>
+<input type="text" id="description" placeholder="Description"><br><br>
+<input type="text" id="category" placeholder="Category"><br><br>
+<textarea id="attributes" placeholder='{"color":"red","size":"M"}'></textarea><br><br>
+
+<button onclick="addProduct()">Submit</button>
+
+<pre id="addResult"></pre>
+
+<hr>
+
+<h2>Search Product</h2>
+
+<input type="text" id="query" placeholder="Search by name">
+<button onclick="searchProduct()">Search</button>
+
+<pre id="searchResult"></pre>
+
+
+<script>
+
+async function addProduct() {
+
+    const formData = new FormData()
+
+    formData.append("file", document.getElementById("image").files[0])
+    formData.append("name", document.getElementById("name").value)
+    formData.append("price", document.getElementById("price").value)
+    formData.append("brand", document.getElementById("brand").value)
+    formData.append("description", document.getElementById("description").value)
+    formData.append("category", document.getElementById("category").value)
+    formData.append("attributes", document.getElementById("attributes").value)
+
+    const response = await fetch("/products", {
+        method: "POST",
+        body: formData
+    })
+
+    const data = await response.json()
+
+    document.getElementById("addResult").innerText =
+        JSON.stringify(data, null, 2)
+}
+
+
+async function searchProduct() {
+
+    const query = document.getElementById("query").value
+
+    const response = await fetch(`/search?query=${query}`)
+
+    const data = await response.json()
+
+    document.getElementById("searchResult").innerText =
+        JSON.stringify(data, null, 2)
+}
+
+</script>
+
+</body>
+</html>

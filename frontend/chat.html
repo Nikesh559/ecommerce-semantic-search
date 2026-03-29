@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat UI</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f0f2f5; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+
+        /* Main Container */
+        .chat-container {
+            width: 400px;
+            height: 600px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .chat-header {
+            background: #075e54;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Message Area */
+        #chat-window {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); /* Subtle pattern */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .sent {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            border-bottom-right-radius: 2px;
+        }
+
+        .received {
+            align-self: flex-start;
+            background-color: #ffffff;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            padding: 10px;
+            background: #ededed;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            outline: none;
+        }
+
+        button {
+            background: #075e54;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        button:hover { background: #128c7e; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">Ecommerce Semantic Search Platform</div>
+    
+    <div id="chat-window">
+        <div class="message received">Hello! How can I help you today?</div>
+    </div>
+
+    <form class="input-area" id="chat-form">
+        <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
+        <button type="submit">➔</button>
+    </form>
+</div>
+
+<!-- <script>
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('msg-input');
+    const windowArea = document.getElementById('chat-window');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = input.value.trim();
+        
+        if (text !== "") {
+            // Create sent message
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('message', 'sent');
+            msgDiv.textContent = text;
+            windowArea.appendChild(msgDiv);
+            
+            // Clear input and scroll to bottom
+            input.value = "";
+            windowArea.scrollTop = windowArea.scrollHeight;
+
+            // Optional: Mock auto-reply
+            setTimeout(() => {
+                const reply = document.createElement('div');
+                reply.classList.add('message', 'received');
+                reply.textContent = "Got it! Looking into that.";
+                windowArea.appendChild(reply);
+                windowArea.scrollTop = windowArea.scrollHeight;
+            }, 1000);
+        }
+    });
+</script> -->
+
+<style>
+    .message img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin-top: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .loading { font-style: italic; color: #888; font-size: 12px; }
+</style>
+
+<script>
+    const chatWindow = document.getElementById('chat-window');
+    const chatForm = document.getElementById('chat-form');
+    const msgInput = document.getElementById('msg-input');
+
+    function appendMessage(content, side, isImage) {
+        const msgDiv = document.createElement('div');
+        msgDiv.classList.add('message', side);
+        
+        if (isImage) {
+            const img = document.createElement('img');
+            img.src = content;
+            msgDiv.appendChild(img);
+        } else {
+            msgDiv.textContent = content;
+        }
+        
+        chatWindow.appendChild(msgDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+        return msgDiv;
+    }
+
+    chatForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        // 1. Display user message
+        appendMessage(text, 'sent');
+        msgInput.value = "";
+
+        // 2. Add a temporary loading indicator
+        const loadingDiv = appendMessage("Typing...", 'received');
+
+        try {
+            // 3. Send HTTP POST request
+            const response = await fetch('http://localhost:8000/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })
+            });
+
+            const data = await response.json();
+            console.log("Received response:", data);
+            // 4. Remove loading indicator and show actual response
+            loadingDiv.remove();
+            appendMessage(data.text, 'received');
+            
+            if (data.image_url) {
+                console.log("Received image URL:", data.image_url);
+                appendMessage("http://localhost:9000/"+data.image_url, 'received', true);
+            }
+        } catch (error) {
+            loadingDiv.textContent = "No relevant product found.";
+            console.error("Fetch error:", error);
+        }
+    });
+</script>
+</body>
+</html>
