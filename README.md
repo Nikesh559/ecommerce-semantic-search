@@ -13,5 +13,5 @@ allowing users to find items via descriptive prompts and PostgreSQL retrieval.
 
 
 ## System Design
-<img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/feature/search/system-design.png" alt="Alt text" width="700">
+<img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/main/system-design.png" alt="Alt text" width="700">
 
