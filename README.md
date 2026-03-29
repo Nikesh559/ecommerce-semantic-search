@@ -1,1 +1,8 @@
-<img src="path/to/image.png" alt="Alt text" width="500">
+## Working of Application
+
+## Technologies Used
+
+
+## System Design
+<img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/feature/search/system-design.png" alt="Alt text" width="700">
+
