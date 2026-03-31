@@ -15,7 +15,10 @@ allowing users to find items via descriptive prompts and PostgreSQL retrieval.
 ## System Design
 <img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/main/system-design.png" alt="Alt text" width="700">
 
-## Chat Bot 
+## Page to add Product
+<img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/main/product-add.png" alt="Alt text" width="700">
+
+## Chat Bot Page 
 
 <img src="https://raw.githubusercontent.com/Nikesh559/ecommerce-semantic-search/refs/heads/main/chat-ss.png" alt="Alt text" width="700">
 
